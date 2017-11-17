@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "550856007816",
+    "firebase_url": "https://tindinee.firebaseio.com",
+    "project_id": "tindinee",
+    "storage_bucket": "tindinee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550856007816:android:15554035ae503d9b",
+        "android_client_info": {
+          "package_name": "com.popcornchicken.tindine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "550856007816-r32gf43mb2ujepamhrd5ingt4s4gfdnl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyFFFszsL1cF1bYJpwPgkXf6Qb-V73GXw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
