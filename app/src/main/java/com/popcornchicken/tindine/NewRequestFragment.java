@@ -47,9 +47,8 @@ public class NewRequestFragment extends Fragment {
     private Button mSubmitButton;
     private EditText mEditStartTime;
     private EditText mEditEndTime;
-    private EditText mEditPartyName;
-    private EditText mEditNumberInParty;
-    private EditText mEditPrice;
+    private EditText mEditTopic1;
+    private EditText mEditTopic2;
     private int mStartHour;
     private int mStartMinute;
     private int mEndHour;
@@ -89,9 +88,8 @@ public class NewRequestFragment extends Fragment {
         mSubmitButton = (Button) view.findViewById(R.id.submitButton);
         mEditStartTime = (EditText) view.findViewById(R.id.editStartTime);
         mEditEndTime = (EditText) view.findViewById(R.id.editEndTime);
-        mEditPartyName = (EditText) view.findViewById(R.id.editPartyName);
-        mEditNumberInParty = (EditText) view.findViewById(R.id.editNumberInParty);
-        mEditPrice = (EditText) view.findViewById(R.id.editPrice);
+        mEditTopic1 = (EditText) view.findViewById(R.id.editTopic1);
+        mEditTopic2 = (EditText) view.findViewById(R.id.editTopic2);
 
         mAutocompleteFragment = (PlaceAutocompleteFragment)
                 getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
@@ -177,9 +175,8 @@ public class NewRequestFragment extends Fragment {
             public void onClick(View v) {
                 String startTime = Integer.toString(mStartHour) + ":" + Integer.toString(mStartMinute);
                 String endTime = Integer.toString(mEndHour) + ":" + Integer.toString(mEndMinute);
-                String partyName = mEditPartyName.getText().toString();
-                int numberInParty = Integer.parseInt(mEditNumberInParty.getText().toString());
-                double price = Double.parseDouble(mEditPrice.getText().toString());
+                String topic1 = mEditTopic1.getText().toString();
+                String topic2 = mEditTopic2.getText().toString();
                 Restaurant restaurant = createRestaurantFromPlace(mPlaceSelected);
 
                 Toast.makeText(getContext(), "Request Submitted", Toast.LENGTH_SHORT).show();
@@ -187,11 +184,10 @@ public class NewRequestFragment extends Fragment {
                 mAutocompleteFragment.setText("");
                 mEditStartTime.setText("");
                 mEditEndTime.setText("");
-                mEditPartyName.setText("");
-                mEditNumberInParty.setText("");
-                mEditPrice.setText("");
+                mEditTopic1.setText("");
+                mEditTopic2.setText("");
 
-                mRequest = createNewRequest(restaurant, startTime, endTime, partyName, numberInParty, price);
+                mRequest = createNewRequest(restaurant, startTime, endTime, topic1, topic2);
                 mListener.onSubmitButtonPressed(TAG);
             }
         });
@@ -214,11 +210,10 @@ public class NewRequestFragment extends Fragment {
             Restaurant restaurant,
             String startTime,
             String endTime,
-            String partyName,
-            int numParty,
-            double price) {
-        RequestData requestData = new RequestData(startTime, endTime, partyName, numParty,
-                restaurant, price);
+            String topic1,
+            String topic2) {
+        RequestData requestData = new RequestData(startTime, endTime, topic1, topic2,
+                restaurant);
         // requesterID is the user's FBID
         Request newRequest = new Request(User.getUserFBID(), requestData);
         FirebaseManager.getInstance().writeRequest(newRequest);

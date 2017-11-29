@@ -47,33 +47,24 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/editPartyName"
+        android:id="@+id/editTopic1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
         android:backgroundTint="@color/colorPrimaryDark"
-        android:hint="Party Name"/>
+        android:hint="Lunch Topic"
+        android:inputType="text"/>
 
     <EditText
-        android:id="@+id/editNumberInParty"
+        android:id="@+id/editTopic2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
         android:backgroundTint="@color/colorPrimaryDark"
-        android:hint="Number In Party"
-        android:inputType="number"/>
-
-    <EditText
-        android:id="@+id/editPrice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:hint="Price"
-        android:inputType="number"/>
+        android:hint="Lunch Topic"
+        android:inputType="text"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
