@@ -99,7 +99,7 @@ public class FirebaseManager {
         });
 
         // attach listener for user reservations (requests claimed/completed by the user)
-        requestDatabase.orderByChild("reserverID").equalTo(userID)
+        requestDatabase.orderByChild("acceptorID").equalTo(userID)
         .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) { //something changed!
@@ -226,11 +226,10 @@ public class FirebaseManager {
         // request info
         DataSnapshot requestData = requestSnapshot.child("requestData");
 
-        String partyName = (String) requestData.child("partyName").getValue();
-        int numParty = ((Long) requestData.child("numParty").getValue()).intValue();
         String startTime = (String) requestData.child("startTime").getValue();
         String endTime = (String) requestData.child("endTime").getValue();
-        double payment = ((Long) requestData.child("payment").getValue()).doubleValue();
+        String topic1 = (String) requestData.child("topic1").getValue();
+        String topic2 = (String) requestData.child("topic2").getValue();
 
         // restaurant info
         DataSnapshot restaurant_info = requestData.child("restaurant");
@@ -242,7 +241,7 @@ public class FirebaseManager {
         Restaurant restaurant = new Restaurant(restaurantID, restaurantName, restaurantPhoneNumber, restaurantAddress, restaurantCity);
 
         // Create RequestData object
-        RequestData newRequestData = new RequestData(startTime, endTime, partyName, numParty, restaurant, (double) payment);
+        RequestData newRequestData = new RequestData(startTime, endTime, topic1, topic2, restaurant);
         Request newRequest = new Request(requesterID, newRequestData, requestID);
 
         return newRequest;

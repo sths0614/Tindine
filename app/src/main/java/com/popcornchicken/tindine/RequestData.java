@@ -7,23 +7,32 @@ public class RequestData {
 
     private String mStartTime;
     private String mEndTime;
-    private String mPartyName;
-    private int mNumParty;
+    private String mTopic1;
+    private String mTopic2;
     private Restaurant mRestaurant;
-    private double mPayment;
 
+    /**
+     * Creates a RequestData instance.
+     */
     public RequestData() {
     }
 
-    public RequestData(String startTime, String endTime, String partyName, int numParty,
-                       Restaurant restaurant, double payment) {
+    /**
+     * Creates a RequestData instance.
+     * @param startTime The earliest time the requester would like the reservation to be placed.
+     * @param endTime The time at which the request is cancelled if it has not been completed.
+     * @param topic1 Lunch topic 1.
+     * @param topic2 Lunch topic 2.
+     * @param restaurant Restaurant object containing requested restaurant information.
+     */
+    public RequestData(String startTime, String endTime, String topic1, String topic2,
+                       Restaurant restaurant) {
 
         this.mStartTime = startTime;
         this.mEndTime = endTime;
-        this.mPartyName = partyName;
-        this.mNumParty = numParty;
+        this.mTopic1 = topic1;
+        this.mTopic2 = topic2;
         this.mRestaurant = restaurant;
-        this.mPayment = payment;
     }
 
     public String getStartTime() {
@@ -42,20 +51,20 @@ public class RequestData {
         this.mEndTime = endTime;
     }
 
-    public double getPayment() {
-        return mPayment;
+    public String getTopic1() {
+        return mTopic1;
     }
 
-    public void setPayment(double payment) {
-        this.mPayment = payment;
+    public void setTopic1(String topic1) {
+        this.mTopic1 = topic1;
     }
 
-    public String getPartyName() {
-        return mPartyName;
+    public String getTopic2() {
+        return mTopic2;
     }
 
-    public void setPartyName(String partyName) {
-        this.mPartyName = partyName;
+    public void setmTopic2(String topic2) {
+        this.mTopic2 = topic2;
     }
 
     public void setRestaurant(Restaurant restaurant) {
@@ -65,13 +74,4 @@ public class RequestData {
     public Restaurant getRestaurant() {
         return mRestaurant;
     }
-
-    public int getNumParty() {
-        return mNumParty;
-    }
-
-    public void setNumParty(int numParty) {
-        this.mNumParty = numParty;
-    }
-
 }
