@@ -22,24 +22,35 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         mContext = context;
     }
 
+    private class ViewHolder{
+        ImageView restaurantImage;
+        TextView restaurantName;
+        TextView restaurantAddress;
+        TextView requestStatus;
+    }
+
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         // Get the request item for this position
         Request request = getItem(position);
+        ViewHolder holder = null;
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_request, parent);
+            holder = new ViewHolder();
+
+            holder.restaurantImage = (ImageView) convertView.findViewById(R.id.item_request_restaurant_image);
+            holder.restaurantName = (TextView) convertView.findViewById(R.id.item_request_restaurant_name);
+            holder.restaurantAddress = (TextView) convertView.findViewById(R.id.item_request_restaurant_address);
+            holder.requestStatus = (TextView) convertView.findViewById(R.id.item_request_status);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        // Lookup view for data population
-        ImageView restaurantImage = (ImageView) convertView.findViewById(R.id.item_request_restaurant_image);
-        TextView restaurantName = (TextView) convertView.findViewById(R.id.item_request_restaurant_name);
-        TextView restaurantAddress = (TextView) convertView.findViewById(R.id.item_request_restaurant_address);
-        TextView requestStatus = (TextView) convertView.findViewById(R.id.item_request_status);
-
-        restaurantName.setText(request.getRequestData().getRestaurant().getRestaurantName());
-        restaurantAddress.setText(request.getRequestData().getRestaurant().getRestaurantAddress());
-        requestStatus.setText(request.getRequestState());
+        holder.restaurantName.setText(request.getRequestData().getRestaurant().getRestaurantName());
+        holder.restaurantAddress.setText(request.getRequestData().getRestaurant().getRestaurantAddress());
+        holder.requestStatus.setText(request.getRequestState());
 
         return convertView;
     }
