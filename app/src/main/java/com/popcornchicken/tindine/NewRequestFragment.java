@@ -188,7 +188,7 @@ public class NewRequestFragment extends Fragment {
                 mEditTopic2.setText("");
 
                 mRequest = createNewRequest(restaurant, startTime, endTime, topic1, topic2);
-                mListener.onSubmitButtonPressed(TAG);
+                mListener.onSubmitButtonPressed(TAG, mRequest);
             }
         });
 
@@ -216,7 +216,6 @@ public class NewRequestFragment extends Fragment {
                 restaurant);
         // requesterID is the user's FBID
         Request newRequest = new Request(User.getUserFBID(), requestData);
-        FirebaseManager.getInstance().writeRequest(newRequest);
         return newRequest;
     }
 
@@ -260,6 +259,6 @@ public class NewRequestFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(String TAG);
-        void onSubmitButtonPressed(String TAG);
+        void onSubmitButtonPressed(String TAG, Request request);
     }
 }

@@ -19,8 +19,6 @@ public class Request {
 
     public Request(String requesterID, RequestData requestData) {
         // generate unique request ID using Firebase
-        FirebaseManager firebaseManager = FirebaseManager.getInstance();
-        mRequestID = firebaseManager.getNewRequestID();
         mRequesterID = requesterID;
         mRequestState = RequestState.PENDING;
         mRequestData = requestData;
@@ -36,6 +34,8 @@ public class Request {
     public String getRequestID() {
         return mRequestID;
     }
+
+    public void setRequestID(String requestID) { mRequestID = requestID; }
 
     public String getRequesterID() {
         return mRequesterID;

@@ -36,7 +36,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         ViewHolder holder = null;
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_request, parent);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_request, parent, false);
             holder = new ViewHolder();
 
             holder.restaurantImage = (ImageView) convertView.findViewById(R.id.item_request_restaurant_image);

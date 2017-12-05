@@ -28,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +36,10 @@ import java.util.Locale;
 import com.facebook.Profile;
 
 public class MainActivity extends AppCompatActivity
-        implements MainFragment.OnFragmentInteractionListener, NewRequestFragment.OnFragmentInteractionListener {
+        implements MainFragment.OnFragmentInteractionListener,
+            NewRequestFragment.OnFragmentInteractionListener,
+            RequestFeedFragment.OnFragmentInteractionListener,
+            FirebaseManager.OnDataReadyListener {
     private static final String SELECTED_ITEM = "arg_selected_item";
 
     private BottomNavigationViewEx mBottomNav;
@@ -48,15 +52,20 @@ public class MainActivity extends AppCompatActivity
     protected GeoDataClient mGeoDataClient;
     protected PlaceDetectionClient mPlaceDetectionClient;
 
+    private FirebaseManager mFirebaseManager;
+    private RequestFeedFragment mHomeFragment;
+    private Fragment mUserFragment;
+    private NewRequestFragment mAddFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mViewPager = (ViewPager) findViewById(R.id.vp);
 
+        initFirebaseData();
         initView();
         initData();
-        initFirebaseData();
         initGooglePlacesAPI();
         initEvent();
     }
@@ -84,6 +93,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_logout:
                 // TODO: logout gracefully
                 break;
+            case R.id.action_refresh:
+                mHomeFragment.updateListView();
+                break;
         }
         return true;
     }
@@ -106,20 +118,33 @@ public class MainActivity extends AppCompatActivity
         fragments = new ArrayList<>(3);
         items = new SparseIntArray(3);
 
-        Fragment userFragment = MainFragment.newInstance("User");
-        Fragment homeFragment = MainFragment.newInstance("Home");
+        mUserFragment = MainFragment.newInstance("User");
+//        Fragment homeFragment = MainFragment.newInstance("Home");
+        mHomeFragment = RequestFeedFragment.newInstance();
 //        Fragment addFragment = MainFragment.newInstance("Add");
-        Fragment addFragment = NewRequestFragment.newInstance();
+        mAddFragment = NewRequestFragment.newInstance();
 
-        fragments.add(userFragment);
-        fragments.add(homeFragment);
-        fragments.add(addFragment);
+        fragments.add(mUserFragment);
+        fragments.add(mHomeFragment);
+        fragments.add(mAddFragment);
 
         items.put(R.id.menu_user, 0);
         items.put(R.id.menu_home, 1);
         items.put(R.id.menu_add, 2);
 
         mViewPager.setAdapter(new VpAdapter(getFragmentManager(), fragments));
+    }
+
+    public void onNearbyRequestsReady() {
+        mHomeFragment.initListView();
+    }
+
+    public void onRequesterRequestsReady() {
+
+    }
+
+    public void onReserverRequestsReady() {
+
     }
 
     private void initEvent() {
@@ -161,8 +186,15 @@ public class MainActivity extends AppCompatActivity
         String userID = intent.getStringExtra("userFbId");
         // TODO: get the userCity using their Android location
         String userCity = "Los Angeles";
-        FirebaseManager.attachInitialFirebaseListeners(userID, userCity);
-        FirebaseManager.attachFirebaseListeners(userID, userCity);
+        mFirebaseManager = new FirebaseManager(this);
+        mFirebaseManager.attachInitialFirebaseListeners(userID, userCity);
+        mFirebaseManager.attachFirebaseListeners(userID, userCity);
+
+//        try {
+//            Thread.sleep(3000);
+//        } catch (Exception e) {
+//            //swallows
+//        }
     }
 
     private void updateToolbarText(CharSequence text) {
@@ -185,8 +217,11 @@ public class MainActivity extends AppCompatActivity
         // TODO
     }
 
-    public void onSubmitButtonPressed(String TAG) {
+    public void onSubmitButtonPressed(String TAG, Request request) {
         if (TAG.equals(NewRequestFragment.TAG)) {
+            request.setRequestID(mFirebaseManager.getNewRequestID());
+            mFirebaseManager.writeRequest(request);
+            mHomeFragment.updateListView();
             mViewPager.setCurrentItem(1);
         }
     }
