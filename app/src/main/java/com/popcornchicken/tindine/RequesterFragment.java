@@ -88,7 +88,6 @@ public class RequesterFragment extends Fragment {
         }
         mRequests.clear();
         mRequests.addAll(RequestTracker.getInstance().getUserRequests());
-        Collections.reverse(mRequests);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -101,7 +100,6 @@ public class RequesterFragment extends Fragment {
         mProgressBar.setVisibility(View.GONE);
 
         mRequests = RequestTracker.getInstance().getUserRequests();
-        Collections.reverse(mRequests);
 
 //        ArrayList<Request> reversedRequests = new ArrayList<>();
 //        for(int i = mRequests.size() - 1; i >= 0; i--) {

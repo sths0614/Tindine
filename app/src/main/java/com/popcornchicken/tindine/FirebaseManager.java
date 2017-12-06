@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.webkit.ConsoleMessage.MessageLevel.LOG;
@@ -52,6 +53,7 @@ public class FirebaseManager {
                     allRequests.add(newRequest);
                 }
                 // save all requests
+                Collections.reverse(allRequests);
                 RequestTracker.getInstance().setAllRequests(allRequests);
             }
 
@@ -74,6 +76,7 @@ public class FirebaseManager {
                     }
                 }
                 // save nearby requests
+                Collections.reverse(nearbyRequests);
                 RequestTracker.getInstance().setNearbyRequests(nearbyRequests);
             }
 
@@ -94,6 +97,7 @@ public class FirebaseManager {
                     userRequests.add(newRequest);
                 }
                 // save nearby requests
+                Collections.reverse(userRequests);
                 RequestTracker.getInstance().setUserRequests(userRequests);
             }
 
@@ -114,6 +118,7 @@ public class FirebaseManager {
                     userReservations.add(newRequest);
                 }
                 // save nearby requests
+                Collections.reverse(userReservations);
                 RequestTracker.getInstance().setUserReservations(userReservations);
             }
 
@@ -145,6 +150,7 @@ public class FirebaseManager {
                     allRequests.add(newRequest);
                 }
                 // save all requests
+                Collections.reverse(allRequests);
                 RequestTracker.getInstance().setAllRequests(allRequests);
             }
 
@@ -167,6 +173,7 @@ public class FirebaseManager {
                     }
                 }
                 // save nearby requests
+                Collections.reverse(nearbyRequests);
                 RequestTracker.getInstance().setNearbyRequests(nearbyRequests);
                 mListener.onNearbyRequestsReady();
             }
@@ -188,6 +195,7 @@ public class FirebaseManager {
                     userRequests.add(newRequest);
                 }
                 // save nearby requests
+                Collections.reverse(userRequests);
                 RequestTracker.getInstance().setUserRequests(userRequests);
                 mListener.onRequesterRequestsReady();
             }
@@ -209,6 +217,7 @@ public class FirebaseManager {
                     userReservations.add(newRequest);
                 }
                 // save nearby requests
+                Collections.reverse(userReservations);
                 RequestTracker.getInstance().setUserReservations(userReservations);
                 mListener.onReserverRequestsReady();
             }

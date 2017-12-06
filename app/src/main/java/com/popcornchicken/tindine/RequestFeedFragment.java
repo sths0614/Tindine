@@ -85,7 +85,6 @@ public class RequestFeedFragment extends Fragment {
         }
         mRequests.clear();
         mRequests.addAll(RequestTracker.getInstance().getNearbyRequests());
-        Collections.reverse(mRequests);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -98,7 +97,6 @@ public class RequestFeedFragment extends Fragment {
         mProgressBar.setVisibility(View.GONE);
 
         mRequests = RequestTracker.getInstance().getNearbyRequests();
-        Collections.reverse(mRequests);
         mAdapter = new RequestAdapter(getActivity(), mRequests);
 
         mListView.setAdapter(mAdapter);
