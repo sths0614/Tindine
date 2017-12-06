@@ -140,6 +140,7 @@ public class AcceptorFragment extends Fragment {
                 break;
             case 2:
                 clickedRequest.setRequestState(RequestState.PENDING);
+                clickedRequest.setReserverID(null);
                 mListener.onUpdateRequestState(TAG, clickedRequest);
                 break;
             case 3:

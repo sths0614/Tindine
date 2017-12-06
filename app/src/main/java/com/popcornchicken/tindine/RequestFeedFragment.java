@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.facebook.Profile;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -142,6 +144,7 @@ public class RequestFeedFragment extends Fragment {
         switch (resultCode) {
             case 1:
                 clickedRequest.setRequestState(RequestState.CLAIMED);
+                clickedRequest.setReserverID(Profile.getCurrentProfile().getId());
                 mListener.onUpdateRequestState(TAG, clickedRequest);
                 break;
             case 2:
