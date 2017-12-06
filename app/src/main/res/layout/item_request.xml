@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:padding="5dp"
-            android:src="@drawable/com_facebook_button_icon_blue"
+            android:src="@drawable/ic_food"
             />
 
         <LinearLayout
@@ -60,7 +60,7 @@
         android:layout_marginTop="20dp"
         android:text="@string/restaurant_placeholder_status"
         android:textAlignment="center"
-        android:textColor="@color/orange_700"
+        android:textColor="@color/red_700"
         android:textSize="20sp"
         android:textStyle="bold"
         />

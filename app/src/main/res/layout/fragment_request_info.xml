@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:padding="5dp"
-            android:src="@drawable/com_facebook_button_icon_blue"
+            android:src="@drawable/ic_food"
             />
 
         <LinearLayout
@@ -70,7 +70,7 @@
         android:layout_marginTop="20dp"
         android:text="@string/restaurant_placeholder_status"
         android:textAlignment="center"
-        android:textColor="@color/orange_700"
+        android:textColor="@color/red_700"
         android:textSize="20sp"
         android:textStyle="bold"
         />
@@ -85,8 +85,8 @@
 
     <ImageView
         android:id="@+id/request_info_requester_profile_picture"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/com_facebook_profile_picture_blank_portrait"
         />
@@ -96,25 +96,26 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="10dp"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="10"
         >
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_marginEnd="10dp"
             android:text="@string/lunch_topic_1"
             android:textColor="@color/black"
+            android:textSize="18sp"
             />
 
         <TextView
             android:id="@+id/request_info_lunch_topic_1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
             android:text="@string/placeholder_lunch_topic"
             android:textColor="@color/black"
+            android:textSize="18sp"
             />
 
     </LinearLayout>
@@ -122,26 +123,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="5dp"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="10"
         >
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_marginEnd="10dp"
             android:text="@string/lunch_topic_2"
             android:textColor="@color/black"
+            android:textSize="18sp"
             />
 
         <TextView
             android:id="@+id/request_info_lunch_topic_2"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
             android:text="@string/placeholder_lunch_topic"
             android:textColor="@color/black"
+            android:textSize="18sp"
             />
 
     </LinearLayout>
