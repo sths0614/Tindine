@@ -68,8 +68,10 @@ public class FirebaseManager {
                 ArrayList<Request> nearbyRequests = new ArrayList<Request>();
                 for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
                     Request newRequest = parseJson(requestSnapshot);
-                    Log.d("Nearby requests", "requestID: " + newRequest.getRequestID());
-                    nearbyRequests.add(newRequest);
+                    if (newRequest.getRequestState().equals(RequestState.PENDING)) {
+                        Log.d("Nearby requests", "requestID: " + newRequest.getRequestID());
+                        nearbyRequests.add(newRequest);
+                    }
                 }
                 // save nearby requests
                 RequestTracker.getInstance().setNearbyRequests(nearbyRequests);
@@ -101,7 +103,7 @@ public class FirebaseManager {
         });
 
         // attach listener for user reservations (requests claimed/completed by the user)
-        requestDatabase.orderByChild("acceptorID").equalTo(userID)
+        requestDatabase.orderByChild("reserverID").equalTo(userID)
         .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) { //something changed!
@@ -144,7 +146,6 @@ public class FirebaseManager {
                 }
                 // save all requests
                 RequestTracker.getInstance().setAllRequests(allRequests);
-                mListener.onNearbyRequestsReady();
             }
 
             @Override
@@ -160,12 +161,14 @@ public class FirebaseManager {
                 ArrayList<Request> nearbyRequests = new ArrayList<Request>();
                 for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
                     Request newRequest = parseJson(requestSnapshot);
-                    Log.d("Init nearby requests", "requestID: " + newRequest.getRequestID());
-                    nearbyRequests.add(newRequest);
-
+                    if (newRequest.getRequestState().equals(RequestState.PENDING)) {
+                        Log.d("Init nearby requests", "requestID: " + newRequest.getRequestID());
+                        nearbyRequests.add(newRequest);
+                    }
                 }
                 // save nearby requests
                 RequestTracker.getInstance().setNearbyRequests(nearbyRequests);
+                mListener.onNearbyRequestsReady();
             }
 
             @Override
@@ -186,6 +189,7 @@ public class FirebaseManager {
                 }
                 // save nearby requests
                 RequestTracker.getInstance().setUserRequests(userRequests);
+                mListener.onRequesterRequestsReady();
             }
 
             @Override
@@ -206,6 +210,7 @@ public class FirebaseManager {
                 }
                 // save nearby requests
                 RequestTracker.getInstance().setUserReservations(userReservations);
+                mListener.onReserverRequestsReady();
             }
 
             @Override
@@ -222,10 +227,7 @@ public class FirebaseManager {
     public Request parseJson(DataSnapshot requestSnapshot) {
         String requestID = (String) requestSnapshot.child("requestID").getValue();
         String requesterID = (String) requestSnapshot.child("requesterID").getValue();
-
-        // request state info
-        DataSnapshot requestState = requestSnapshot.child("requestState");
-        String stateStr = (String) requestState.child("temp").getValue();
+        String state = (String) requestSnapshot.child("requestState").getValue();
 
         // request info
         DataSnapshot requestData = requestSnapshot.child("requestData");
@@ -247,6 +249,7 @@ public class FirebaseManager {
         // Create RequestData object
         RequestData newRequestData = new RequestData(startTime, endTime, topic1, topic2, restaurant);
         Request newRequest = new Request(requesterID, newRequestData, requestID);
+        newRequest.setRequestState(state);
 
         return newRequest;
     }

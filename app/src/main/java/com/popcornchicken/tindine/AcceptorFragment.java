@@ -1,20 +1,24 @@
 package com.popcornchicken.tindine;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-
-import com.facebook.Profile;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,11 +28,10 @@ import java.util.Collections;
  * Use the {@link RequestFeedFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RequestFeedFragment extends Fragment {
+public class AcceptorFragment extends Fragment {
 
-    public static final String TAG = "RequestFeedFragment";
+    public static final String TAG = "AcceptorFragment";
     private ArrayList<Request> mRequests;
-    private ArrayList<Request> mFilteredRequests;
     private ListView mListView;
     private ProgressBar mProgressBar;
     private RequestAdapter mAdapter;
@@ -36,7 +39,7 @@ public class RequestFeedFragment extends Fragment {
     private Request clickedRequest;
     private boolean mDataReady = false;
 
-    public RequestFeedFragment() {
+    public AcceptorFragment() {
         // Required empty public constructor
     }
 
@@ -47,8 +50,8 @@ public class RequestFeedFragment extends Fragment {
      * @return A new instance of fragment RequestFeedFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RequestFeedFragment newInstance() {
-        RequestFeedFragment fragment = new RequestFeedFragment();
+    public static AcceptorFragment newInstance() {
+        AcceptorFragment fragment = new AcceptorFragment();
         return fragment;
     }
 
@@ -61,18 +64,17 @@ public class RequestFeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_requestfeed, container, false);
+        View view = inflater.inflate(R.layout.fragment_acceptor, container, false);
 
-        mListView = (ListView) view.findViewById(R.id.request_list);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mListView = (ListView) view.findViewById(R.id.acceptor_request_list);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.acceptor_progressBar);
 
-        if (mDataReady) {
+        if(mDataReady) {
             initListView();
         } else {
             mProgressBar.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.GONE);
         }
-
         return view;
     }
 
@@ -80,11 +82,11 @@ public class RequestFeedFragment extends Fragment {
         if (mRequests == null) {
             mRequests = new ArrayList<>();
         }
-        if (mRequests.equals(RequestTracker.getInstance().getNearbyRequests())) {
+        if (mRequests.equals(RequestTracker.getInstance().getUserReservations())) {
             return;
         }
         mRequests.clear();
-        mRequests.addAll(RequestTracker.getInstance().getNearbyRequests());
+        mRequests.addAll(RequestTracker.getInstance().getUserReservations());
         Collections.reverse(mRequests);
         mAdapter.notifyDataSetChanged();
     }
@@ -97,13 +99,12 @@ public class RequestFeedFragment extends Fragment {
 
         mProgressBar.setVisibility(View.GONE);
 
-        mRequests = RequestTracker.getInstance().getNearbyRequests();
+        mRequests = RequestTracker.getInstance().getUserReservations();
         Collections.reverse(mRequests);
-        mAdapter = new RequestAdapter(getActivity(), mRequests);
 
+        mAdapter = new RequestAdapter(getActivity(), mRequests);
         mListView.setAdapter(mAdapter);
         mListView.setVisibility(View.VISIBLE);
-
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -136,11 +137,11 @@ public class RequestFeedFragment extends Fragment {
         switch (resultCode) {
             case 1:
                 clickedRequest.setRequestState(RequestState.CLAIMED);
-                clickedRequest.setReserverID(Profile.getCurrentProfile().getId());
                 mListener.onUpdateRequestState(TAG, clickedRequest);
                 break;
             case 2:
                 clickedRequest.setRequestState(RequestState.PENDING);
+                clickedRequest.setReserverID(null);
                 mListener.onUpdateRequestState(TAG, clickedRequest);
                 break;
             case 3:

@@ -1,20 +1,25 @@
 package com.popcornchicken.tindine;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.app.Fragment;
+import android.service.voice.VoiceInteractionSession;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-
-import com.facebook.Profile;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,11 +29,10 @@ import java.util.Collections;
  * Use the {@link RequestFeedFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RequestFeedFragment extends Fragment {
+public class RequesterFragment extends Fragment {
 
-    public static final String TAG = "RequestFeedFragment";
+    public static final String TAG = "RequesterFragment";
     private ArrayList<Request> mRequests;
-    private ArrayList<Request> mFilteredRequests;
     private ListView mListView;
     private ProgressBar mProgressBar;
     private RequestAdapter mAdapter;
@@ -36,7 +40,7 @@ public class RequestFeedFragment extends Fragment {
     private Request clickedRequest;
     private boolean mDataReady = false;
 
-    public RequestFeedFragment() {
+    public RequesterFragment() {
         // Required empty public constructor
     }
 
@@ -47,8 +51,8 @@ public class RequestFeedFragment extends Fragment {
      * @return A new instance of fragment RequestFeedFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RequestFeedFragment newInstance() {
-        RequestFeedFragment fragment = new RequestFeedFragment();
+    public static RequesterFragment newInstance() {
+        RequesterFragment fragment = new RequesterFragment();
         return fragment;
     }
 
@@ -61,18 +65,17 @@ public class RequestFeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_requestfeed, container, false);
+        View view = inflater.inflate(R.layout.fragment_requester, container, false);
 
-        mListView = (ListView) view.findViewById(R.id.request_list);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mListView = (ListView) view.findViewById(R.id.requester_request_list);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.requester_progressBar);
 
-        if (mDataReady) {
+        if(mDataReady) {
             initListView();
         } else {
             mProgressBar.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.GONE);
         }
-
         return view;
     }
 
@@ -80,11 +83,11 @@ public class RequestFeedFragment extends Fragment {
         if (mRequests == null) {
             mRequests = new ArrayList<>();
         }
-        if (mRequests.equals(RequestTracker.getInstance().getNearbyRequests())) {
+        if (mRequests.equals(RequestTracker.getInstance().getUserRequests())) {
             return;
         }
         mRequests.clear();
-        mRequests.addAll(RequestTracker.getInstance().getNearbyRequests());
+        mRequests.addAll(RequestTracker.getInstance().getUserRequests());
         Collections.reverse(mRequests);
         mAdapter.notifyDataSetChanged();
     }
@@ -97,13 +100,16 @@ public class RequestFeedFragment extends Fragment {
 
         mProgressBar.setVisibility(View.GONE);
 
-        mRequests = RequestTracker.getInstance().getNearbyRequests();
+        mRequests = RequestTracker.getInstance().getUserRequests();
         Collections.reverse(mRequests);
-        mAdapter = new RequestAdapter(getActivity(), mRequests);
 
+//        ArrayList<Request> reversedRequests = new ArrayList<>();
+//        for(int i = mRequests.size() - 1; i >= 0; i--) {
+//            reversedRequests.add(mRequests.get(i));
+//        }
+        mAdapter = new RequestAdapter(getActivity(), mRequests);
         mListView.setAdapter(mAdapter);
         mListView.setVisibility(View.VISIBLE);
-
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -136,7 +142,6 @@ public class RequestFeedFragment extends Fragment {
         switch (resultCode) {
             case 1:
                 clickedRequest.setRequestState(RequestState.CLAIMED);
-                clickedRequest.setReserverID(Profile.getCurrentProfile().getId());
                 mListener.onUpdateRequestState(TAG, clickedRequest);
                 break;
             case 2:
@@ -145,6 +150,7 @@ public class RequestFeedFragment extends Fragment {
                 break;
             case 3:
                 clickedRequest.setRequestState(RequestState.PENDING);
+                clickedRequest.setReserverID(null);
                 mListener.onUpdateRequestState(TAG, clickedRequest);
                 break;
             case 4:
