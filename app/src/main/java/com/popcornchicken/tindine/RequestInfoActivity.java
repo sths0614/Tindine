@@ -39,7 +39,6 @@ public class RequestInfoActivity extends Activity {
     }
 
     private void populateFields(Intent intent) {
-        final String requestIdIntent = intent.getStringExtra("requestId");
         final String requesterIdIntent = intent.getStringExtra("requesterId");
         final String requestStatusIntent = intent.getStringExtra("requestStatus");
         final String restaurantNameIntent = intent.getStringExtra("restaurantName");
@@ -47,7 +46,6 @@ public class RequestInfoActivity extends Activity {
         final String lunchTopic1Intent = intent.getStringExtra("lunchTopic1");
         final String lunchTopic2Intent = intent.getStringExtra("lunchTopic2");
 
-        requestId = requestIdIntent;
         requesterId = requesterIdIntent;
         status.setText(requestStatusIntent);
 
@@ -112,24 +110,26 @@ public class RequestInfoActivity extends Activity {
     public void button2Clicked() {
         switch (requestViewingState) {
             case RequestViewingState.REQUESTER_PENDING:
-                // remove request
+                setResult(4); // remove request
                 break;
             case RequestViewingState.REQUESTER_CLAIMED:
-                // un-match request
+                setResult(3); // un-match request
                 break;
             case RequestViewingState.ACCEPTOR_PENDING:
-                // claim request
+                setResult(1); // claim request
                 break;
             case RequestViewingState.ACCEPTOR_CLAIMED:
-                // un-claim request
+                setResult(2); // un-claim request
                 break;
         }
+        finish();
     }
 
     // Always complete button
     @OnClick(R.id.request_info_button3)
     public void button3Clicked() {
-        // complete request
+        setResult(5); // complete request
+        finish();
     }
 
     @OnClick(R.id.request_info_requester_profile_picture)

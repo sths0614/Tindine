@@ -29,6 +29,7 @@ public class RequestFeedFragment extends Fragment {
     private ProgressBar mProgressBar;
     private RequestAdapter mAdapter;
     private OnFragmentInteractionListener mListener;
+    private String clickedRequestId;
 
     public RequestFeedFragment() {
         // Required empty public constructor
@@ -91,7 +92,7 @@ public class RequestFeedFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final Request request = (Request) adapterView.getItemAtPosition(i);
                 final RequestData requestData = request.getRequestData();
-                final String requestId = request.getRequestID();
+                clickedRequestId = request.getRequestID();
                 final String requesterId = request.getRequesterID();
                 final String requestStatus = request.getRequestState();
                 final String restaurantName = requestData.getRestaurant().getRestaurantName();
@@ -100,16 +101,36 @@ public class RequestFeedFragment extends Fragment {
                 final String lunchTopic2 = requestData.getTopic2();
 
                 final Intent intent = new Intent(getActivity(), RequestInfoActivity.class);
-                intent.putExtra("requestId", requestId);
                 intent.putExtra("requesterId", requesterId);
                 intent.putExtra("requestStatus", requestStatus);
                 intent.putExtra("restaurantName", restaurantName);
                 intent.putExtra("restaurantAddress", restaurantAddress);
                 intent.putExtra("lunchTopic1", lunchTopic1);
                 intent.putExtra("lunchTopic2", lunchTopic2);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) {
+            case 1:
+                // claim request
+                break;
+            case 2:
+                // un-claim request
+                break;
+            case 3:
+                // un-match request
+                break;
+            case 4:
+                // remove request
+                break;
+            case 5:
+                // complete request
+                break;
+        }
     }
 
     @Override
