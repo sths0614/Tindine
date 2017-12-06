@@ -31,6 +31,7 @@ public class RequestFeedFragment extends Fragment {
     private RequestAdapter mAdapter;
     private OnFragmentInteractionListener mListener;
     private Request clickedRequest;
+    private boolean mDataReady = false;
 
     public RequestFeedFragment() {
         // Required empty public constructor
@@ -62,8 +63,12 @@ public class RequestFeedFragment extends Fragment {
         mListView = (ListView) view.findViewById(R.id.request_list);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-        mProgressBar.setVisibility(View.VISIBLE);
-        mListView.setVisibility(View.GONE);
+        if (mDataReady) {
+            initListView();
+        } else {
+            mProgressBar.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.GONE);
+        }
 
         return view;
     }
@@ -79,6 +84,11 @@ public class RequestFeedFragment extends Fragment {
     }
 
     public void initListView() {
+        mDataReady = true;
+        if (mProgressBar == null) {
+            return;
+        }
+
         mProgressBar.setVisibility(View.GONE);
 
         mRequests = RequestTracker.getInstance().getNearbyRequests();

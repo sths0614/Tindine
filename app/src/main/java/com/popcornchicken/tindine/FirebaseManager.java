@@ -144,7 +144,6 @@ public class FirebaseManager {
                 }
                 // save all requests
                 RequestTracker.getInstance().setAllRequests(allRequests);
-                mListener.onNearbyRequestsReady();
             }
 
             @Override
@@ -162,10 +161,10 @@ public class FirebaseManager {
                     Request newRequest = parseJson(requestSnapshot);
                     Log.d("Init nearby requests", "requestID: " + newRequest.getRequestID());
                     nearbyRequests.add(newRequest);
-
                 }
                 // save nearby requests
                 RequestTracker.getInstance().setNearbyRequests(nearbyRequests);
+                mListener.onNearbyRequestsReady();
             }
 
             @Override
@@ -186,6 +185,7 @@ public class FirebaseManager {
                 }
                 // save nearby requests
                 RequestTracker.getInstance().setUserRequests(userRequests);
+                mListener.onRequesterRequestsReady();
             }
 
             @Override
