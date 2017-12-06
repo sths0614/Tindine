@@ -68,7 +68,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Picasso.with(getContext()).load(stringBuilder.toString()).into(holder.restaurantImage);
+//                Picasso.with(getContext()).load(stringBuilder.toString()).into(holder.restaurantImage);
             }
         };
 

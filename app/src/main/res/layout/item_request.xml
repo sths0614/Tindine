@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/restaurant_placeholder_name"
+                android:lines="2"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
