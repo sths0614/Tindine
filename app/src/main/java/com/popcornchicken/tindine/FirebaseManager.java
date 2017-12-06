@@ -68,8 +68,10 @@ public class FirebaseManager {
                 ArrayList<Request> nearbyRequests = new ArrayList<Request>();
                 for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
                     Request newRequest = parseJson(requestSnapshot);
-                    Log.d("Nearby requests", "requestID: " + newRequest.getRequestID());
-                    nearbyRequests.add(newRequest);
+                    if (newRequest.getRequestState().equals(RequestState.PENDING)) {
+                        Log.d("Nearby requests", "requestID: " + newRequest.getRequestID());
+                        nearbyRequests.add(newRequest);
+                    }
                 }
                 // save nearby requests
                 RequestTracker.getInstance().setNearbyRequests(nearbyRequests);
@@ -101,7 +103,7 @@ public class FirebaseManager {
         });
 
         // attach listener for user reservations (requests claimed/completed by the user)
-        requestDatabase.orderByChild("acceptorID").equalTo(userID)
+        requestDatabase.orderByChild("reserverID").equalTo(userID)
         .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) { //something changed!
@@ -159,8 +161,10 @@ public class FirebaseManager {
                 ArrayList<Request> nearbyRequests = new ArrayList<Request>();
                 for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
                     Request newRequest = parseJson(requestSnapshot);
-                    Log.d("Init nearby requests", "requestID: " + newRequest.getRequestID());
-                    nearbyRequests.add(newRequest);
+                    if (newRequest.getRequestState().equals(RequestState.PENDING)) {
+                        Log.d("Init nearby requests", "requestID: " + newRequest.getRequestID());
+                        nearbyRequests.add(newRequest);
+                    }
                 }
                 // save nearby requests
                 RequestTracker.getInstance().setNearbyRequests(nearbyRequests);
@@ -206,6 +210,7 @@ public class FirebaseManager {
                 }
                 // save nearby requests
                 RequestTracker.getInstance().setUserReservations(userReservations);
+                mListener.onReserverRequestsReady();
             }
 
             @Override
