@@ -87,7 +87,6 @@ public class AcceptorFragment extends Fragment {
         }
         mRequests.clear();
         mRequests.addAll(RequestTracker.getInstance().getUserReservations());
-        Collections.reverse(mRequests);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -100,7 +99,6 @@ public class AcceptorFragment extends Fragment {
         mProgressBar.setVisibility(View.GONE);
 
         mRequests = RequestTracker.getInstance().getUserReservations();
-        Collections.reverse(mRequests);
 
         mAdapter = new RequestAdapter(getActivity(), mRequests);
         mListView.setAdapter(mAdapter);
