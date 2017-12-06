@@ -96,6 +96,7 @@ public class RequestFeedFragment extends Fragment {
                 clickedRequest = request;
                 final String requesterId = request.getRequesterID();
                 final String requestStatus = request.getRequestState();
+                final String restaurantId = requestData.getRestaurant().getRestaurantID();
                 final String restaurantName = requestData.getRestaurant().getRestaurantName();
                 final String restaurantAddress = requestData.getRestaurant().getRestaurantAddress();
                 final String lunchTopic1 = requestData.getTopic1();
@@ -104,6 +105,7 @@ public class RequestFeedFragment extends Fragment {
                 final Intent intent = new Intent(getActivity(), RequestInfoActivity.class);
                 intent.putExtra("requesterId", requesterId);
                 intent.putExtra("requestStatus", requestStatus);
+                intent.putExtra("restaurantId", restaurantId);
                 intent.putExtra("restaurantName", restaurantName);
                 intent.putExtra("restaurantAddress", restaurantAddress);
                 intent.putExtra("lunchTopic1", lunchTopic1);

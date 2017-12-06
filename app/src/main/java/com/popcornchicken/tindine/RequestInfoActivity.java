@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,11 +13,20 @@ import android.widget.TextView;
 import com.facebook.Profile;
 import com.squareup.picasso.Picasso;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RequestInfoActivity extends Activity {
+    @BindView(R.id.restaurant_info_restaurant_picture) ImageView restaurantImage;
     @BindView(R.id.request_info_restaurant_name) TextView restaurantName;
     @BindView(R.id.request_info_restaurant_address) TextView restaurantAddress;
     @BindView(R.id.request_info_lunch_topic_1) TextView lunchTopic1;
@@ -28,7 +38,6 @@ public class RequestInfoActivity extends Activity {
 
     String requestViewingState;
     String requesterId;
-    String requestId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +50,7 @@ public class RequestInfoActivity extends Activity {
     private void populateFields(Intent intent) {
         final String requesterIdIntent = intent.getStringExtra("requesterId");
         final String requestStatusIntent = intent.getStringExtra("requestStatus");
+        final String restaurantId = intent.getStringExtra("restaurantId");
         final String restaurantNameIntent = intent.getStringExtra("restaurantName");
         final String restaurantAddressIntent = intent.getStringExtra("restaurantAddress");
         final String lunchTopic1Intent = intent.getStringExtra("lunchTopic1");
@@ -48,6 +58,37 @@ public class RequestInfoActivity extends Activity {
 
         requesterId = requesterIdIntent;
         status.setText(requestStatusIntent);
+
+        final Handler handler = new Handler();
+        final StringBuilder stringBuilder = new StringBuilder();
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Picasso.with(getApplicationContext()).load(stringBuilder.toString()).into(restaurantImage);
+            }
+        };
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final HttpClient httpClient = new DefaultHttpClient();
+                final String placesUrl = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + restaurantId + "&key=AIzaSyCnTJyympLgv92-Siakx4piUr1GfeiQd8I";
+                final HttpGet httpGet = new HttpGet(placesUrl);
+                try {
+                    HttpResponse response = httpClient.execute(httpGet);
+                    String serverResponse = EntityUtils.toString(response.getEntity());
+                    JSONObject jsonObject = new JSONObject(serverResponse);
+                    JSONArray jsonArray = jsonObject.getJSONObject("result").getJSONArray("photos");
+                    String photoReference = jsonArray.getJSONObject(0).getString("photo_reference");
+
+                    String photoReferenceUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + photoReference + "&key=AIzaSyCnTJyympLgv92-Siakx4piUr1GfeiQd8I";
+                    stringBuilder.append(photoReferenceUrl);
+                    handler.postDelayed(runnable, 0);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }).start();
 
         restaurantName.setText(restaurantNameIntent);
         restaurantAddress.setText(restaurantAddressIntent);
