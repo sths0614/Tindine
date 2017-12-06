@@ -6,6 +6,5 @@ public class RequestState {
     public static final String PENDING = "pending";
     public static final String CLAIMED = "claimed";
     public static final String COMPLETED = "completed";
-    public static final String PAID = "paid";
 
 }

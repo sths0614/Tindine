@@ -16,9 +16,17 @@
     <string name="placeholder_name">John Doe</string>
     <string name="placeholder_number_in_party">5 people</string>
     <string name="x_people">%1$d people</string>
-
+    <string name="placeholder_lunch_topic">Placeholder Lunch Topic</string>
     <string name="cancel">Cancel</string>
     <string name="claim">Claim</string>
+    <string name="complete">Complete</string>
+
+    <string name="lunch_topic_1">Lunch Topic 1:</string>
+    <string name="lunch_topic_2">Lunch Topic 2:</string>
+
+    <string name="remove_request">Remove Request</string>
+    <string name="unclaim_request">Un-claim Request</string>
+    <string name="unmatch_request">Un-match Request</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
