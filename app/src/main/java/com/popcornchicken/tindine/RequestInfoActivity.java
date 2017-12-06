@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RequestInfoFragment extends Activity {
+public class RequestInfoActivity extends Activity {
     @BindView(R.id.request_info_restaurant_name) TextView restaurantName;
     @BindView(R.id.request_info_restaurant_address) TextView restaurantAddress;
     @BindView(R.id.request_info_lunch_topic_1) TextView lunchTopic1;

@@ -44,7 +44,7 @@
 
         <activity android:name=".MainActivity"/>
         <activity android:name=".LoginActivity"/>
-        <activity android:name=".RequestInfoFragment"/>
+        <activity android:name=".RequestInfoActivity"/>
     </application>
 
 </manifest>
