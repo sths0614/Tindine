@@ -3,6 +3,7 @@
     <string name="facebook_app_id">132360634149597</string>
     <string name="fb_login_protocol_scheme">fb132360634149597</string>
     <string name="google_places_api_key">AIzaSyBPHzr0aUZED9KwP6SYzK6VbAvgi1uubQU</string>
+    <string name="google_api">AIzaSyBPHzr0aUZED9KwP6SYzK6VbAvgi1uubQU</string>
 
     <string name="menu_requester">Requests Sent</string>
     <string name="menu_acceptor">Requests Claimed</string>

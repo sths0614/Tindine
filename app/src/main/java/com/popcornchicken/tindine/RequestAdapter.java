@@ -76,7 +76,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
             @Override
             public void run() {
                 final HttpClient httpClient = new DefaultHttpClient();
-                final String placesUrl = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + request.getRequestData().getRestaurant().getRestaurantID() + "&key=AIzaSyCnTJyympLgv92-Siakx4piUr1GfeiQd8I";
+                final String placesUrl = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + request.getRequestData().getRestaurant().getRestaurantID() + "&key=" + getContext().getResources().getString(R.string.google_api);
                 final HttpGet httpGet = new HttpGet(placesUrl);
                 try {
                     HttpResponse response = httpClient.execute(httpGet);
@@ -85,7 +85,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
                     JSONArray jsonArray = jsonObject.getJSONObject("result").getJSONArray("photos");
                     String photoReference = jsonArray.getJSONObject(0).getString("photo_reference");
 
-                    String photoReferenceUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + photoReference + "&key=AIzaSyCnTJyympLgv92-Siakx4piUr1GfeiQd8I";
+                    String photoReferenceUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + photoReference + "&key=" + getContext().getResources().getString(R.string.google_api);;
                     stringBuilder.append(photoReferenceUrl);
                     handler.postDelayed(runnable, 0);
                 } catch (Exception ex) {
