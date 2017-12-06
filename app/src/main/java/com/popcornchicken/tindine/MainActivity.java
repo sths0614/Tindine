@@ -226,6 +226,20 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onUpdateRequestState(String TAG, Request request) {
+        if (TAG.equals(RequestFeedFragment.TAG)) {
+            mFirebaseManager.writeRequest(request);
+        }
+    }
+
+    @Override
+    public void onDeleteRequest(String TAG, Request request) {
+        if (TAG.equals(RequestFeedFragment.TAG)) {
+            mFirebaseManager.deleteRequest(request);
+        }
+    }
+
     /**
      * view pager adapter
      */

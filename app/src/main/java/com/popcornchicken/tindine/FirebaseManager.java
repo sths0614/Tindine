@@ -280,6 +280,10 @@ public class FirebaseManager {
         // TODO: error handling
     }
 
+    void deleteRequest(Request request) {
+        mRequestDatabase.child(request.getRequestID()).removeValue();
+    }
+
     public interface OnDataReadyListener {
         void onNearbyRequestsReady();
         void onRequesterRequestsReady();

@@ -24,12 +24,13 @@ import java.util.Collections;
  */
 public class RequestFeedFragment extends Fragment {
 
+    public static final String TAG = "RequestFeedFragment";
     private ArrayList<Request> mRequests;
     private ListView mListView;
     private ProgressBar mProgressBar;
     private RequestAdapter mAdapter;
     private OnFragmentInteractionListener mListener;
-    private String clickedRequestId;
+    private Request clickedRequest;
 
     public RequestFeedFragment() {
         // Required empty public constructor
@@ -92,7 +93,7 @@ public class RequestFeedFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final Request request = (Request) adapterView.getItemAtPosition(i);
                 final RequestData requestData = request.getRequestData();
-                clickedRequestId = request.getRequestID();
+                clickedRequest = request;
                 final String requesterId = request.getRequesterID();
                 final String requestStatus = request.getRequestState();
                 final String restaurantName = requestData.getRestaurant().getRestaurantName();
@@ -116,19 +117,23 @@ public class RequestFeedFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
             case 1:
-                // claim request
+                clickedRequest.setRequestState(RequestState.CLAIMED);
+                mListener.onUpdateRequestState(TAG, clickedRequest);
                 break;
             case 2:
-                // un-claim request
+                clickedRequest.setRequestState(RequestState.PENDING);
+                mListener.onUpdateRequestState(TAG, clickedRequest);
                 break;
             case 3:
-                // un-match request
+                clickedRequest.setRequestState(RequestState.PENDING);
+                mListener.onUpdateRequestState(TAG, clickedRequest);
                 break;
             case 4:
-                // remove request
+                mListener.onDeleteRequest(TAG, clickedRequest);
                 break;
             case 5:
-                // complete request
+                clickedRequest.setRequestState(RequestState.COMPLETED);
+                mListener.onUpdateRequestState(TAG, clickedRequest);
                 break;
         }
     }
@@ -163,5 +168,7 @@ public class RequestFeedFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(String TAG);
+        void onUpdateRequestState(String TAG, Request request);
+        void onDeleteRequest(String TAG, Request request);
     }
 }
