@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_refresh:
                 mHomeFragment.updateListView();
                 mRequesterFragment.updateListView();
+                mAcceptorFragment.updateListView();
                 break;
         }
         return true;
