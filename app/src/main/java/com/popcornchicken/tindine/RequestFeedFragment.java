@@ -1,23 +1,18 @@
 package com.popcornchicken.tindine;
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,13 +82,34 @@ public class RequestFeedFragment extends Fragment {
         mRequests = RequestTracker.getInstance().getNearbyRequests();
         Collections.reverse(mRequests);
 
-//        ArrayList<Request> reversedRequests = new ArrayList<>();
-//        for(int i = mRequests.size() - 1; i >= 0; i--) {
-//            reversedRequests.add(mRequests.get(i));
-//        }
         mAdapter = new RequestAdapter(getActivity(), mRequests);
         mListView.setAdapter(mAdapter);
         mListView.setVisibility(View.VISIBLE);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final Request request = (Request) adapterView.getItemAtPosition(i);
+                final RequestData requestData = request.getRequestData();
+                final String requestId = request.getRequestID();
+                final String requesterId = request.getRequesterID();
+                final String requestStatus = request.getRequestState();
+                final String restaurantName = requestData.getRestaurant().getRestaurantName();
+                final String restaurantAddress = requestData.getRestaurant().getRestaurantAddress();
+                final String lunchTopic1 = requestData.getTopic1();
+                final String lunchTopic2 = requestData.getTopic2();
+
+                final Intent intent = new Intent(getActivity(), RequestInfoActivity.class);
+                intent.putExtra("requestId", requestId);
+                intent.putExtra("requesterId", requesterId);
+                intent.putExtra("requestStatus", requestStatus);
+                intent.putExtra("restaurantName", restaurantName);
+                intent.putExtra("restaurantAddress", restaurantAddress);
+                intent.putExtra("lunchTopic1", lunchTopic1);
+                intent.putExtra("lunchTopic2", lunchTopic2);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

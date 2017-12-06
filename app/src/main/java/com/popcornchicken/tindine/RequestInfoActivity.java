@@ -12,8 +12,6 @@ import android.widget.TextView;
 import com.facebook.Profile;
 import com.squareup.picasso.Picasso;
 
-import java.util.zip.GZIPOutputStream;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -30,6 +28,7 @@ public class RequestInfoActivity extends Activity {
 
     String requestViewingState;
     String requesterId;
+    String requestId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,35 +39,39 @@ public class RequestInfoActivity extends Activity {
     }
 
     private void populateFields(Intent intent) {
-        final Request request = (Request) intent.getSerializableExtra("RequestObject");
-        if (request != null) {
-            requesterId = request.getRequesterID();
-            status.setText(request.getRequestState());
-            final RequestData requestData = request.getRequestData();
-            if (requestData != null) {
-                restaurantName.setText(requestData.getRestaurant().getRestaurantName());
-                restaurantAddress.setText(requestData.getRestaurant().getRestaurantAddress());
-                lunchTopic1.setText(requestData.getTopic1());
-                lunchTopic2.setText(requestData.getTopic2());
-            }
+        final String requestIdIntent = intent.getStringExtra("requestId");
+        final String requesterIdIntent = intent.getStringExtra("requesterId");
+        final String requestStatusIntent = intent.getStringExtra("requestStatus");
+        final String restaurantNameIntent = intent.getStringExtra("restaurantName");
+        final String restaurantAddressIntent = intent.getStringExtra("restaurantAddress");
+        final String lunchTopic1Intent = intent.getStringExtra("lunchTopic1");
+        final String lunchTopic2Intent = intent.getStringExtra("lunchTopic2");
 
-            final boolean isRequester = requesterId.equals(Profile.getCurrentProfile().getId());
-            switch (request.getRequestState()) {
-                case RequestState.PENDING:
-                    requestViewingState = isRequester ? RequestViewingState.REQUESTER_PENDING : RequestViewingState.ACCEPTOR_PENDING;
-                    break;
-                case RequestState.CLAIMED:
-                    requestViewingState = isRequester ? RequestViewingState.REQUESTER_CLAIMED : RequestViewingState.ACCEPTOR_CLAIMED;
-                    break;
-                case RequestState.COMPLETED:
-                    requestViewingState = isRequester ? RequestViewingState.REQUESTER_COMPLETED : RequestViewingState.ACCEPTOR_COMPLETED;
-                    break;
-            }
+        requestId = requestIdIntent;
+        requesterId = requesterIdIntent;
+        status.setText(requestStatusIntent);
 
-            initializeButtons();
-            final String profilePicUrl = "https://graph.facebook.com/" + requesterId + "/picture?type=square";
-            Picasso.with(getApplicationContext()).load(profilePicUrl).into(requesterProfilePicture);
+        restaurantName.setText(restaurantNameIntent);
+        restaurantAddress.setText(restaurantAddressIntent);
+        lunchTopic1.setText(lunchTopic1Intent);
+        lunchTopic2.setText(lunchTopic2Intent);
+
+        final boolean isRequester = requesterId.equals(Profile.getCurrentProfile().getId());
+        switch (requestStatusIntent) {
+            case RequestState.PENDING:
+                requestViewingState = isRequester ? RequestViewingState.REQUESTER_PENDING : RequestViewingState.ACCEPTOR_PENDING;
+                break;
+            case RequestState.CLAIMED:
+                requestViewingState = isRequester ? RequestViewingState.REQUESTER_CLAIMED : RequestViewingState.ACCEPTOR_CLAIMED;
+                break;
+            case RequestState.COMPLETED:
+                requestViewingState = isRequester ? RequestViewingState.REQUESTER_COMPLETED : RequestViewingState.ACCEPTOR_COMPLETED;
+                break;
         }
+
+        initializeButtons();
+        final String profilePicUrl = "https://graph.facebook.com/" + requesterId + "/picture?type=square";
+        Picasso.with(getApplicationContext()).load(profilePicUrl).into(requesterProfilePicture);
     }
 
     private void initializeButtons() {
