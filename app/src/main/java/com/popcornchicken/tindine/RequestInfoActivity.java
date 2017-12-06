@@ -106,6 +106,9 @@ public class RequestInfoActivity extends Activity {
             case RequestState.COMPLETED:
                 requestViewingState = isRequester ? RequestViewingState.REQUESTER_COMPLETED : RequestViewingState.ACCEPTOR_COMPLETED;
                 break;
+            default:
+                requestViewingState = RequestViewingState.REQUESTER_COMPLETED;
+                break;
         }
 
         initializeButtons();

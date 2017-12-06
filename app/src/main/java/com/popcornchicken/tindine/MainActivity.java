@@ -240,11 +240,20 @@ public class MainActivity extends AppCompatActivity
         if (TAG.equals(RequestFeedFragment.TAG)) {
             mFirebaseManager.writeRequest(request);
         }
+        if (TAG.equals(RequesterFragment.TAG)) {
+            mFirebaseManager.writeRequest(request);
+        }
+        if (TAG.equals(AcceptorFragment.TAG)) {
+            mFirebaseManager.writeRequest(request);
+        }
     }
 
     @Override
     public void onDeleteRequest(String TAG, Request request) {
         if (TAG.equals(RequestFeedFragment.TAG)) {
+            mFirebaseManager.deleteRequest(request);
+        }
+        if (TAG.equals(RequesterFragment.TAG)) {
             mFirebaseManager.deleteRequest(request);
         }
     }

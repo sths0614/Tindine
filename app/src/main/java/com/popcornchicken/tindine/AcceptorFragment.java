@@ -1,6 +1,7 @@
 package com.popcornchicken.tindine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -29,11 +30,13 @@ import java.util.List;
  */
 public class AcceptorFragment extends Fragment {
 
+    public static final String TAG = "AcceptorFragment";
     private ArrayList<Request> mRequests;
     private ListView mListView;
     private ProgressBar mProgressBar;
     private RequestAdapter mAdapter;
     private OnFragmentInteractionListener mListener;
+    private Request clickedRequest;
     private boolean mDataReady = false;
 
     public AcceptorFragment() {
@@ -103,6 +106,54 @@ public class AcceptorFragment extends Fragment {
         mAdapter = new RequestAdapter(getActivity(), mRequests);
         mListView.setAdapter(mAdapter);
         mListView.setVisibility(View.VISIBLE);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final Request request = (Request) adapterView.getItemAtPosition(i);
+                final RequestData requestData = request.getRequestData();
+                clickedRequest = request;
+                final String requesterId = request.getRequesterID();
+                final String requestStatus = request.getRequestState();
+                final String restaurantName = requestData.getRestaurant().getRestaurantName();
+                final String restaurantAddress = requestData.getRestaurant().getRestaurantAddress();
+                final String lunchTopic1 = requestData.getTopic1();
+                final String lunchTopic2 = requestData.getTopic2();
+
+                final Intent intent = new Intent(getActivity(), RequestInfoActivity.class);
+                intent.putExtra("requesterId", requesterId);
+                intent.putExtra("requestStatus", requestStatus);
+                intent.putExtra("restaurantName", restaurantName);
+                intent.putExtra("restaurantAddress", restaurantAddress);
+                intent.putExtra("lunchTopic1", lunchTopic1);
+                intent.putExtra("lunchTopic2", lunchTopic2);
+                startActivityForResult(intent, 0);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) {
+            case 1:
+                clickedRequest.setRequestState(RequestState.CLAIMED);
+                mListener.onUpdateRequestState(TAG, clickedRequest);
+                break;
+            case 2:
+                clickedRequest.setRequestState(RequestState.PENDING);
+                mListener.onUpdateRequestState(TAG, clickedRequest);
+                break;
+            case 3:
+                clickedRequest.setRequestState(RequestState.PENDING);
+                mListener.onUpdateRequestState(TAG, clickedRequest);
+                break;
+            case 4:
+                mListener.onDeleteRequest(TAG, clickedRequest);
+                break;
+            case 5:
+                clickedRequest.setRequestState(RequestState.COMPLETED);
+                mListener.onUpdateRequestState(TAG, clickedRequest);
+                break;
+        }
     }
 
     @Override
@@ -135,5 +186,7 @@ public class AcceptorFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(String TAG);
+        void onUpdateRequestState(String TAG, Request request);
+        void onDeleteRequest(String TAG, Request request);
     }
 }
