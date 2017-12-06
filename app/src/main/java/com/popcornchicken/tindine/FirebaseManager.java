@@ -1,5 +1,6 @@
 package com.popcornchicken.tindine;
 
+import android.content.Context;
 import android.util.Log;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -18,15 +19,16 @@ public class FirebaseManager {
 
     private static final String TAG = "FirebaseManager";  // for debugging
 
-    // singleton class
-    private static FirebaseManager mFirebaseManager = new FirebaseManager();
-
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mRequestDatabase;
 
-    private FirebaseManager() {
+    private OnDataReadyListener mListener;
+
+    public FirebaseManager(Context context) {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRequestDatabase = mFirebaseDatabase.getReference("requests");
+        mListener = (OnDataReadyListener) context;
+        // TODO: try catch with throwable
     }
 
     /**
@@ -36,8 +38,8 @@ public class FirebaseManager {
      * @param String userID   current user's FBID
      * @param String userCity the user's current city based on their Android location
      */
-    public static void attachFirebaseListeners(String userID, String userCity) {
-        DatabaseReference requestDatabase = FirebaseManager.getInstance().getRequestDatabase();
+    public void attachFirebaseListeners(String userID, String userCity) {
+        DatabaseReference requestDatabase = getRequestDatabase();
 
         // attach listener for all requests
         requestDatabase.addValueEventListener(new ValueEventListener() {
@@ -127,8 +129,8 @@ public class FirebaseManager {
      * @param String userID   current user's FBID
      * @param String userCity the user's current city based on their Android location
      */
-    public static void attachInitialFirebaseListeners(String userID, String userCity) {
-        DatabaseReference requestDatabase = FirebaseManager.getInstance().getRequestDatabase();
+    public void attachInitialFirebaseListeners(String userID, String userCity) {
+        DatabaseReference requestDatabase = getRequestDatabase();
 
         // listener to get all requests when app first starts
         requestDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -136,12 +138,13 @@ public class FirebaseManager {
             public void onDataChange(DataSnapshot dataSnapshot) { //something changed!
                 ArrayList<Request> allRequests = new ArrayList<Request>();
                 for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
-                    Request newRequest = FirebaseManager.parseJson(requestSnapshot);
+                    Request newRequest = parseJson(requestSnapshot);
                     Log.d("Init all requests", "requestID: " + newRequest.getRequestID());
                     allRequests.add(newRequest);
                 }
                 // save all requests
                 RequestTracker.getInstance().setAllRequests(allRequests);
+                mListener.onNearbyRequestsReady();
             }
 
             @Override
@@ -156,9 +159,10 @@ public class FirebaseManager {
             public void onDataChange(DataSnapshot dataSnapshot) { //something changed!
                 ArrayList<Request> nearbyRequests = new ArrayList<Request>();
                 for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
-                    Request newRequest = FirebaseManager.parseJson(requestSnapshot);
+                    Request newRequest = parseJson(requestSnapshot);
                     Log.d("Init nearby requests", "requestID: " + newRequest.getRequestID());
                     nearbyRequests.add(newRequest);
+
                 }
                 // save nearby requests
                 RequestTracker.getInstance().setNearbyRequests(nearbyRequests);
@@ -176,7 +180,7 @@ public class FirebaseManager {
             public void onDataChange(DataSnapshot dataSnapshot) { //something changed!
                 ArrayList<Request> userRequests = new ArrayList<Request>();
                 for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
-                    Request newRequest = FirebaseManager.parseJson(requestSnapshot);
+                    Request newRequest = parseJson(requestSnapshot);
                     Log.d("Init user requests", "requestID: " + newRequest.getRequestID());
                     userRequests.add(newRequest);
                 }
@@ -196,7 +200,7 @@ public class FirebaseManager {
             public void onDataChange(DataSnapshot dataSnapshot) { //something changed!
                 ArrayList<Request> userReservations = new ArrayList<Request>();
                 for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
-                    Request newRequest = FirebaseManager.parseJson(requestSnapshot);
+                    Request newRequest = parseJson(requestSnapshot);
                     Log.d("Init user reservations", "requestID: " + newRequest.getRequestID());
                     userReservations.add(newRequest);
                 }
@@ -215,7 +219,7 @@ public class FirebaseManager {
      * @param  DataSnapshot JSON object read from Firebase
      * @return Request data contained in the JSON object
      */
-    public static Request parseJson(DataSnapshot requestSnapshot) {
+    public Request parseJson(DataSnapshot requestSnapshot) {
         String requestID = (String) requestSnapshot.child("requestID").getValue();
         String requesterID = (String) requestSnapshot.child("requesterID").getValue();
 
@@ -248,14 +252,6 @@ public class FirebaseManager {
     }
 
     /**
-     * Return the single unique instance of FirebaseManager
-     * @return FirebaseManager unique instance
-     */
-    public static FirebaseManager getInstance() {
-        return mFirebaseManager;
-    }
-
-    /**
      * Return reference to the request node in Firebase
      * @return DatabaseReference request node reference
      */
@@ -282,6 +278,12 @@ public class FirebaseManager {
         // wrote successfully to database
         return true;
         // TODO: error handling
+    }
+
+    public interface OnDataReadyListener {
+        void onNearbyRequestsReady();
+        void onRequesterRequestsReady();
+        void onReserverRequestsReady();
     }
 
 }
