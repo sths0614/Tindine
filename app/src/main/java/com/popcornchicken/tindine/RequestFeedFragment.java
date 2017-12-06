@@ -26,6 +26,7 @@ public class RequestFeedFragment extends Fragment {
 
     public static final String TAG = "RequestFeedFragment";
     private ArrayList<Request> mRequests;
+    private ArrayList<Request> mFilteredRequests;
     private ListView mListView;
     private ProgressBar mProgressBar;
     private RequestAdapter mAdapter;
@@ -77,9 +78,14 @@ public class RequestFeedFragment extends Fragment {
         if (mRequests.equals(RequestTracker.getInstance().getNearbyRequests())) {
             return;
         }
-        mRequests.clear();
-        mRequests.addAll(RequestTracker.getInstance().getNearbyRequests());
-        Collections.reverse(mRequests);
+        mRequests = RequestTracker.getInstance().getNearbyRequests();
+        mFilteredRequests.clear();
+        for(Request req : mRequests) {
+            if (req.getRequestState().equals(RequestState.PENDING)) {
+                mFilteredRequests.add(req);
+            }
+        }
+        Collections.reverse(mFilteredRequests);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -92,7 +98,13 @@ public class RequestFeedFragment extends Fragment {
         mProgressBar.setVisibility(View.GONE);
 
         mRequests = RequestTracker.getInstance().getNearbyRequests();
-        Collections.reverse(mRequests);
+        mFilteredRequests =  new ArrayList<>();
+        for(Request req : mRequests) {
+            if (req.getRequestState().equals(RequestState.PENDING)) {
+                mFilteredRequests.add(req);
+            }
+        }
+        Collections.reverse(mFilteredRequests);
 
         mAdapter = new RequestAdapter(getActivity(), mRequests);
         mListView.setAdapter(mAdapter);

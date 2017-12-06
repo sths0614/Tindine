@@ -222,10 +222,7 @@ public class FirebaseManager {
     public Request parseJson(DataSnapshot requestSnapshot) {
         String requestID = (String) requestSnapshot.child("requestID").getValue();
         String requesterID = (String) requestSnapshot.child("requesterID").getValue();
-
-        // request state info
-        DataSnapshot requestState = requestSnapshot.child("requestState");
-        String stateStr = (String) requestState.child("temp").getValue();
+        String state = (String) requestSnapshot.child("requestState").getValue();
 
         // request info
         DataSnapshot requestData = requestSnapshot.child("requestData");
@@ -247,6 +244,7 @@ public class FirebaseManager {
         // Create RequestData object
         RequestData newRequestData = new RequestData(startTime, endTime, topic1, topic2, restaurant);
         Request newRequest = new Request(requesterID, newRequestData, requestID);
+        newRequest.setRequestState(state);
 
         return newRequest;
     }
